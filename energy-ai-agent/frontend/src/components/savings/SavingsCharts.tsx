@@ -18,10 +18,10 @@ const tooltipStyle = {
 
 export function SavingsCharts({ projection, distribution }: SavingsChartsProps) {
   return (
-    <section className="grid gap-5 xl:grid-cols-2">
+    <section className="grid min-w-0 gap-5 xl:grid-cols-2">
       <ChartCard title="Monthly Savings Projection" description="12-month cumulative savings from selected recommendations.">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={projection}>
+          <LineChart data={projection} margin={{ top: 8, right: 12, bottom: 8, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.18)" />
             <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 12 }} tickLine={false} axisLine={false} />
             <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} tickLine={false} axisLine={false} />
@@ -34,14 +34,24 @@ export function SavingsCharts({ projection, distribution }: SavingsChartsProps) 
 
       <ChartCard title="Savings Distribution" description="Share of monthly savings by recommendation.">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie data={distribution} dataKey="value" nameKey="title" innerRadius={62} outerRadius={102} paddingAngle={4} animationDuration={900}>
+          <PieChart margin={{ top: 4, right: 8, bottom: 48, left: 8 }}>
+            <Pie
+              data={distribution}
+              dataKey="value"
+              nameKey="title"
+              cx="50%"
+              cy="46%"
+              innerRadius="42%"
+              outerRadius="68%"
+              paddingAngle={4}
+              animationDuration={900}
+            >
               {distribution.map((entry, index) => (
                 <Cell key={entry.recommendationId} fill={pieColors[index % pieColors.length]} />
               ))}
             </Pie>
             <Tooltip contentStyle={tooltipStyle} formatter={(value, _name, props) => [`$${Number(value).toLocaleString()}`, `${props.payload.percentage}%`]} />
-            <Legend />
+            <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: 12, lineHeight: '18px' }} />
           </PieChart>
         </ResponsiveContainer>
       </ChartCard>

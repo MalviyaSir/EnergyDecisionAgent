@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -12,6 +13,7 @@ import {
   Bell,
   Route,
   ShieldCheck,
+  UserCircle,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useClock } from '@/hooks/useClock';
@@ -29,18 +31,27 @@ const navigation = [
 ];
 
 export function AppLayout() {
+  const [profileOpen, setProfileOpen] = useState(false);
   const now = useClock();
-  const formattedDate = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(now);
-  const formattedTime = new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  }).format(now);
+  const formattedDate = useMemo(
+    () =>
+      new Intl.DateTimeFormat('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(now),
+    [now],
+  );
+  const formattedTime = useMemo(
+    () =>
+      new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).format(now),
+    [now],
+  );
 
   return (
     <div className="soft-grid min-h-screen p-4 text-slate-100 md:p-6">
@@ -101,8 +112,38 @@ export function AppLayout() {
               <button className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.08] text-slate-200 transition hover:bg-white/[0.15]">
                 <Bell className="h-4 w-4" />
               </button>
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-200 to-sky-300 text-sm font-black text-slate-950">
-                VM
+              <div className="relative">
+                <button
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-200 to-sky-300 text-sm font-black text-slate-950 transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-200/70"
+                  aria-label="Open user profile"
+                  aria-expanded={profileOpen}
+                  onClick={() => setProfileOpen((open) => !open)}
+                >
+                  VM
+                </button>
+                {profileOpen ? (
+                  <div className="absolute right-0 z-20 mt-3 w-64 rounded-2xl border border-white/10 bg-slate-950/95 p-4 shadow-glass backdrop-blur-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-teal-100">
+                        <UserCircle className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-white">Vaibhav Malviya</p>
+                        <p className="text-xs text-slate-400">Energy Ops Analyst</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 grid gap-2 text-sm text-slate-300">
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Workspace</span>
+                        <span className="font-semibold text-slate-100">Demo Site</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Auth</span>
+                        <span className="font-semibold text-teal-100">Placeholder</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </motion.header>

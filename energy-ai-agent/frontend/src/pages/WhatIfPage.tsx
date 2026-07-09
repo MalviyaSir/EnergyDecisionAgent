@@ -3,23 +3,33 @@ import { motion } from 'framer-motion';
 import { Play, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { requestJson } from '@/lib/api';
 
 export function WhatIfPage() {
   const [result, setResult] = useState<unknown>(null);
+  const [loading, setLoading] = useState(false);
 
   async function runSimulation() {
-    const response = await fetch('/api/what-if', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        temperatureSetpoint: 26,
-        shiftEvCharging: true,
-        reduceLightingPercent: 15,
-        batteryReservePercent: 40,
-      }),
-    });
+    setLoading(true);
 
-    setResult(await response.json());
+    try {
+      const response = await requestJson('/api/what-if', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          temperatureSetpoint: 26,
+          shiftEvCharging: true,
+          reduceLightingPercent: 15,
+          batteryReservePercent: 40,
+        }),
+      });
+
+      setResult(response);
+    } catch (error) {
+      setResult({ error: error instanceof Error ? error.message : 'Unable to run simulation.' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -40,9 +50,9 @@ export function WhatIfPage() {
               {item}
             </div>
           ))}
-          <Button onClick={runSimulation}>
+          <Button onClick={runSimulation} disabled={loading}>
             <Play className="h-4 w-4" />
-            Run Simulation
+            {loading ? 'Running...' : 'Run Simulation'}
           </Button>
         </CardContent>
       </Card>

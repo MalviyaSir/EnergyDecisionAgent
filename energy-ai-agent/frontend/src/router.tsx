@@ -31,6 +31,8 @@ export const router = createBrowserRouter([
       { path: 'savings', element: <SavingsPage /> },
       { path: 'what-if', element: <WhatIfPage /> },
       { path: 'learning-history', element: <LearningHistoryPage /> },
+      // TODO: Add an Upload route only when the CSV upload module is implemented.
+      // TODO: Wire upload completion into the Observation Engine once that flow exists.
     ],
   },
 ]);

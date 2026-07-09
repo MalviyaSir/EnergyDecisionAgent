@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { LiveMeterReading } from '@shared/energy';
 
+const EMPTY_READINGS: LiveMeterReading[] = [];
+
 export function useLiveMeterSimulation(seedReadings: LiveMeterReading[] = []) {
-  const [readings, setReadings] = useState(seedReadings);
+  const stableSeedReadings = seedReadings.length > 0 ? seedReadings : EMPTY_READINGS;
+  const seedKey = useMemo(() => stableSeedReadings.map((reading) => reading.id).join('|'), [stableSeedReadings]);
+  const [readings, setReadings] = useState(stableSeedReadings);
 
   useEffect(() => {
-    setReadings(seedReadings);
-  }, [seedReadings]);
+    setReadings((current) => (current === stableSeedReadings ? current : stableSeedReadings));
+  }, [seedKey, stableSeedReadings]);
 
   useEffect(() => {
-    if (seedReadings.length === 0) {
+    if (stableSeedReadings.length === 0) {
       return undefined;
     }
 
     const timer = window.setInterval(() => {
       setReadings((current) => {
-        const latest = current[0] ?? seedReadings[0];
+        const latest = current[0] ?? stableSeedReadings[0];
         const drift = (Math.random() - 0.45) * 0.4;
         const units = Math.max(1.8, Math.min(24, latest.units + drift));
         const voltage = Math.round(Math.max(220, Math.min(238, latest.voltage + (Math.random() - 0.5) * 2)));
@@ -38,7 +42,7 @@ export function useLiveMeterSimulation(seedReadings: LiveMeterReading[] = []) {
     }, 5000);
 
     return () => window.clearInterval(timer);
-  }, [seedReadings]);
+  }, [seedKey, stableSeedReadings]);
 
   return readings;
 }

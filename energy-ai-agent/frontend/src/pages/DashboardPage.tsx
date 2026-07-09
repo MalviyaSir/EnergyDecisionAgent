@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
+import type { LiveMeterReading } from '@shared/energy';
 import { ApplianceHealthCard } from '@/components/dashboard/ApplianceHealthCard';
 import { DashboardHero } from '@/components/dashboard/DashboardHero';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
@@ -10,9 +11,11 @@ import { Card } from '@/components/ui/card';
 import { useLiveMeterSimulation } from '@/hooks/useLiveMeterSimulation';
 import { useSmartDashboard } from '@/hooks/useSmartDashboard';
 
+const EMPTY_LIVE_READINGS: LiveMeterReading[] = [];
+
 export function DashboardPage() {
   const dashboard = useSmartDashboard();
-  const liveReadings = useLiveMeterSimulation(dashboard.data?.liveMeterFeed ?? []);
+  const liveReadings = useLiveMeterSimulation(dashboard.data?.liveMeterFeed ?? EMPTY_LIVE_READINGS);
 
   if (dashboard.status === 'loading') {
     return <DashboardSkeleton />;

@@ -114,5 +114,18 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
+    # Backward-compatible fields (existing clients depend on these)
     answer: str
     suggested_actions: list[str]
+
+    # AI Building Energy Consultant response (required by updated product spec)
+    summary: str
+    root_cause: str
+    key_findings: list[str]
+    top_recommendations: list[str]
+    estimated_savings: str
+    carbon_reduction: str
+    business_impact: str
+    priority: str
+    confidence: int = Field(ge=0, le=100)
+    next_best_action: str

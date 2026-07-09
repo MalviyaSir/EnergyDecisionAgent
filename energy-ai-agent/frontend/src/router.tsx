@@ -8,6 +8,8 @@ import { ReasoningPage } from '@/pages/ReasoningPage';
 import { RecommendationsPage } from '@/pages/RecommendationsPage';
 import { SavingsPage } from '@/pages/SavingsPage';
 import { WhatIfPage } from '@/pages/WhatIfPage';
+import { ChatPage } from '@/pages/ChatPage';
+
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +33,9 @@ export const router = createBrowserRouter([
       { path: 'savings', element: <SavingsPage /> },
       { path: 'what-if', element: <WhatIfPage /> },
       { path: 'learning-history', element: <LearningHistoryPage /> },
+      { path: 'chat', element: <ChatPage /> },
       // TODO: Add an Upload route only when the CSV upload module is implemented.
+
       // TODO: Wire upload completion into the Observation Engine once that flow exists.
     ],
   },

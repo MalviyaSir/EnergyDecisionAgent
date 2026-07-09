@@ -46,6 +46,54 @@ export type ObservationsResponse = {
   observations: AgentObservation[];
 };
 
+export type ReasoningSeverity = 'Low' | 'Medium' | 'High' | 'Critical';
+
+export type RootCauseAnalysis = {
+  primaryCause: string;
+  secondaryCause: string;
+  supportingFactors: string[];
+  evidence: string[];
+  confidence: number;
+};
+
+export type ReasoningItem = {
+  id: string;
+  linkedObservationId: string;
+  title: string;
+  rootCause: string;
+  rootCauseAnalysis: RootCauseAnalysis;
+  reasoning: string;
+  evidence: string[];
+  confidence: number;
+  severity: ReasoningSeverity;
+  recommendedFocus: string;
+};
+
+export type ReasoningSummary = {
+  reasoningGenerated: number;
+  criticalCauses: number;
+  averageConfidence: number;
+  highestImpactCause: string;
+  overallExplainabilityScore: number;
+};
+
+export type ReasoningTimelineItem = {
+  observationId: string;
+  observationTitle: string;
+  observationType: string;
+  reasonId: string;
+  reasonTitle: string;
+  severity: ReasoningSeverity;
+};
+
+export type ReasoningResponse = {
+  generatedAt: string;
+  sourceObservationGeneratedAt: string;
+  summary: ReasoningSummary;
+  reasoning: ReasoningItem[];
+  timeline: ReasoningTimelineItem[];
+};
+
 export type Prediction = {
   horizon: string;
   expectedUsageKwh: number;

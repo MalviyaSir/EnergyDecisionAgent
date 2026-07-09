@@ -4,6 +4,7 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { LearningHistoryPage } from '@/pages/LearningHistoryPage';
 import { ModulePage } from '@/pages/ModulePage';
 import { ObservationsPage } from '@/pages/ObservationsPage';
+import { ReasoningPage } from '@/pages/ReasoningPage';
 import { WhatIfPage } from '@/pages/WhatIfPage';
 
 export const router = createBrowserRouter([
@@ -23,16 +24,7 @@ export const router = createBrowserRouter([
           />
         ),
       },
-      {
-        path: 'reasoning',
-        element: (
-          <ModulePage
-            title="Reasoning"
-            endpoint="/api/reasoning"
-            summary="Transparent chain-of-thought-style trace for future explainable decisions."
-          />
-        ),
-      },
+      { path: 'reasoning', element: <ReasoningPage /> },
       {
         path: 'recommendations',
         element: (

@@ -6,11 +6,13 @@ import type {
   MeterDataRecord,
   ApplianceHealthStatus,
   ObservationsResponse,
+  ReasoningResponse,
   SmartDashboardResponse,
   WhatIfRequest,
 } from '../../../shared/energy.js';
 import { ObservationEngine } from '../engines/ObservationEngine.js';
 import { readMeterData } from './dataService.js';
+import { generateReasoning } from './reasoningService.js';
 
 export async function getMeterData() {
   return {
@@ -123,16 +125,8 @@ export function getPredictions() {
   };
 }
 
-export function getReasoning() {
-  return {
-    status: 'placeholder',
-    reasoningTrace: [
-      'Observe meter, weather, occupancy, solar, and battery context.',
-      'Segment consumption into baseline and controllable appliance groups.',
-      'Compare current behavior with historical operating patterns.',
-      'Estimate savings and comfort impact before recommending action.',
-    ],
-  };
+export async function getReasoning(): Promise<ReasoningResponse> {
+  return generateReasoning();
 }
 
 export function getRecommendations() {

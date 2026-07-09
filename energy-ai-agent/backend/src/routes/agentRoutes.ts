@@ -55,8 +55,12 @@ agentRouter.get('/predictions', (_request, response) => {
   response.json(getPredictions());
 });
 
-agentRouter.get('/reasoning', (_request, response) => {
-  response.json(getReasoning());
+agentRouter.get('/reasoning', async (_request, response, next) => {
+  try {
+    response.json(await getReasoning());
+  } catch (error) {
+    next(error);
+  }
 });
 
 agentRouter.get('/recommendations', (_request, response) => {

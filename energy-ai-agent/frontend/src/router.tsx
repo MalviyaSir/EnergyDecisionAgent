@@ -6,6 +6,7 @@ import { ModulePage } from '@/pages/ModulePage';
 import { ObservationsPage } from '@/pages/ObservationsPage';
 import { ReasoningPage } from '@/pages/ReasoningPage';
 import { RecommendationsPage } from '@/pages/RecommendationsPage';
+import { SavingsPage } from '@/pages/SavingsPage';
 import { WhatIfPage } from '@/pages/WhatIfPage';
 
 export const router = createBrowserRouter([
@@ -27,16 +28,7 @@ export const router = createBrowserRouter([
       },
       { path: 'reasoning', element: <ReasoningPage /> },
       { path: 'recommendations', element: <RecommendationsPage /> },
-      {
-        path: 'savings',
-        element: (
-          <ModulePage
-            title="Savings"
-            endpoint="/api/savings"
-            summary="Cost, demand, and carbon impact estimates for optimization actions."
-          />
-        ),
-      },
+      { path: 'savings', element: <SavingsPage /> },
       { path: 'what-if', element: <WhatIfPage /> },
       { path: 'learning-history', element: <LearningHistoryPage /> },
     ],

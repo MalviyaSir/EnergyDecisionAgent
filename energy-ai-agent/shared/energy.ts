@@ -140,6 +140,65 @@ export type RecommendationsResponse = {
   recommendations: DecisionRecommendation[];
 };
 
+export type RoiCategory = 'Excellent' | 'Very Good' | 'Good' | 'Moderate' | 'Low';
+
+export type RecommendationSavings = {
+  recommendationId: string;
+  title: string;
+  monthlySavings: number;
+  yearlySavings: number;
+  energySaved: number;
+  yearlyEnergySaved: number;
+  co2Reduction: number;
+  yearlyCo2Reduction: number;
+  roi: RoiCategory;
+  roiScore: number;
+  confidence: number;
+  difficulty: RecommendationDifficulty;
+  paybackMonths: number;
+};
+
+export type SavingsProjectionPoint = {
+  month: string;
+  cumulativeSavings: number;
+};
+
+export type SavingsDistributionPoint = {
+  recommendationId: string;
+  title: string;
+  value: number;
+  percentage: number;
+};
+
+export type EnvironmentalImpact = {
+  treesEquivalent: number;
+  co2Reduction: number;
+  renewableUsagePercent: number;
+  energyEfficiencyImprovementPercent: number;
+};
+
+export type SavingsSummary = {
+  monthlySavings: number;
+  yearlySavings: number;
+  energySavedMonthly: number;
+  energySavedYearly: number;
+  co2ReductionMonthly: number;
+  co2ReductionYearly: number;
+  roiScore: number;
+  paybackPeriod: string;
+};
+
+export type SavingsResponse = {
+  generatedAt: string;
+  sourceRecommendationsGeneratedAt: string;
+  summary: SavingsSummary;
+  recommendationSavings: RecommendationSavings[];
+  leaderboard: RecommendationSavings[];
+  environmentalImpact: EnvironmentalImpact;
+  monthlyProjection: SavingsProjectionPoint[];
+  savingsDistribution: SavingsDistributionPoint[];
+};
+
 export type Prediction = {
   horizon: string;
   expectedUsageKwh: number;

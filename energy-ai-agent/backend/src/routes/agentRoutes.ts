@@ -71,8 +71,12 @@ agentRouter.get('/recommendations', async (_request, response, next) => {
   }
 });
 
-agentRouter.get('/savings', (_request, response) => {
-  response.json(getSavings());
+agentRouter.get('/savings', async (_request, response, next) => {
+  try {
+    response.json(await getSavings());
+  } catch (error) {
+    next(error);
+  }
 });
 
 agentRouter.post('/what-if', (request, response) => {

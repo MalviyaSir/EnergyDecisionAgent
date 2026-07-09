@@ -8,6 +8,7 @@ import type {
   ObservationsResponse,
   RecommendationsResponse,
   ReasoningResponse,
+  SavingsResponse,
   SmartDashboardResponse,
   WhatIfRequest,
 } from '../../../shared/energy.js';
@@ -15,6 +16,7 @@ import { ObservationEngine } from '../engines/ObservationEngine.js';
 import { readMeterData } from './dataService.js';
 import { generateRecommendations } from './recommendationService.js';
 import { generateReasoning } from './reasoningService.js';
+import { generateSavings } from './savingsService.js';
 
 export async function getMeterData() {
   return {
@@ -135,14 +137,8 @@ export async function getRecommendations(): Promise<RecommendationsResponse> {
   return generateRecommendations();
 }
 
-export function getSavings() {
-  return {
-    status: 'placeholder',
-    baselineMonthlyCost: 33420,
-    estimatedOptimizedCost: 28790,
-    estimatedSavings: 4630,
-    carbonReductionKg: 842,
-  };
+export async function getSavings(): Promise<SavingsResponse> {
+  return generateSavings();
 }
 
 export function simulateWhatIf(request: WhatIfRequest) {

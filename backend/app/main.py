@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import analytics, chat, dashboard, recommendations, rooms, simulation
 from app.services.ai_service import AIService
 from app.services.analytics_service import AnalyticsService
+from app.services.health_service import HealthService
 from app.services.recommendation_service import RecommendationService
 from app.services.sensor_service import SensorService
 from app.services.simulation_service import SimulationService
@@ -18,10 +19,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     sensor_service = SensorService(settings)
     recommendation_service = RecommendationService(settings)
+    health_service = HealthService()
 
     app.state.sensor_service = sensor_service
     app.state.recommendation_service = recommendation_service
-    app.state.analytics_service = AnalyticsService(settings, recommendation_service)
+    app.state.health_service = health_service
+    app.state.analytics_service = AnalyticsService(settings, recommendation_service, health_service)
     app.state.simulation_service = SimulationService(settings)
     app.state.ai_service = AIService()
 

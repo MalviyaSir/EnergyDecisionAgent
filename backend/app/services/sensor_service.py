@@ -70,6 +70,7 @@ class SensorService:
                 floor=floor,
                 occupied=occupied,
                 occupancy_count=occupancy_count,
+                occupancy_state_minutes=self._rng.randint(4, 95),
                 ac_status=ac_status,
                 light_status=light_status,
                 fan_status=fan_status,
@@ -84,6 +85,11 @@ class SensorService:
     def _next_room_reading(self, room: Room) -> Room:
         occupied = self._next_occupancy(room)
         occupancy_count = self._next_occupancy_count(room, occupied)
+        occupancy_state_minutes = (
+            room.occupancy_state_minutes + max(1, round(self._settings.sensor_refresh_seconds / 60))
+            if occupied == room.occupied
+            else 0
+        )
         temperature = max(18.0, min(40.5, room.temperature_c + self._rng.uniform(-0.7, 0.8)))
         humidity = max(28.0, min(88.0, room.humidity_percent + self._rng.uniform(-1.8, 1.8)))
         ac_status = self._next_device_status(room.ac_status, occupied, temperature, 0.08)
@@ -96,6 +102,7 @@ class SensorService:
             update={
                 "occupied": occupied,
                 "occupancy_count": occupancy_count,
+                "occupancy_state_minutes": occupancy_state_minutes,
                 "ac_status": ac_status,
                 "light_status": light_status,
                 "fan_status": fan_status,

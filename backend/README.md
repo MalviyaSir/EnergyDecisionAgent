@@ -7,7 +7,7 @@ FastAPI backend for an AI-powered Smart Energy Optimization platform.
 - REST API with CORS enabled
 - 100 realistic in-memory rooms
 - Live sensor refresh every 5 seconds
-- Rule-based AI Decision Engine
+- Explainable rule-based AI Decision Engine
 - No database dependency
 - Modular routers, services, schemas, and utilities
 
@@ -44,7 +44,7 @@ http://127.0.0.1:8000/docs
 - `POST /simulation`
 - `POST /chat`
 
-## Decision Engine
+## Explainable Decision Engine
 
 The current AI Decision Engine is intentionally rule-based and does not call OpenAI yet.
 
@@ -55,5 +55,7 @@ Implemented rules include:
 - Temperature above 35°C
 - Power consumption above anomaly threshold
 - High room occupancy and building-wide occupancy pressure
+
+Every recommendation includes evidence, confidence, priority score, estimated savings, carbon reduction, business impact, recommended action, and a human-readable AI explanation. Anomaly recommendations also include root cause, severity, probability, and recommended resolution.
 
 This keeps the code deterministic, testable, and ready for a future LLM-backed `AIService`.

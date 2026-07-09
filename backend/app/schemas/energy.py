@@ -20,6 +20,7 @@ class Room(BaseModel):
     floor: int
     occupied: bool
     occupancy_count: int = Field(ge=0)
+    occupancy_state_minutes: int = Field(ge=0)
     ac_status: DeviceStatus
     light_status: DeviceStatus
     fan_status: DeviceStatus
@@ -39,15 +40,47 @@ class Dashboard(BaseModel):
     carbon_emission: float
     energy_score: int
     active_alerts: int
+    building_health_score: int
+    building_health_status: str
+    energy_efficiency_score: int
+    energy_efficiency_status: str
+    critical_alerts: int
+    high_priority_actions: int
+    estimated_today_saving: str
+    estimated_monthly_saving: str
+    active_anomalies: int
+
+
+class AnomalyExplanation(BaseModel):
+    root_cause: str
+    severity: Priority
+    probability: int = Field(ge=0, le=100)
+    recommended_resolution: str
 
 
 class Recommendation(BaseModel):
+    id: str
     title: str
-    description: str
-    priority: Priority
-    confidence: int = Field(ge=0, le=100)
-    estimated_saving: str
     category: str
+    priority: Priority
+    reason: str
+    evidence: list[str]
+    confidence: int = Field(ge=0, le=100)
+    estimated_daily_saving: str
+    estimated_monthly_saving: str
+    estimated_carbon_reduction: str
+    urgency: Priority
+    business_impact: str
+    recommended_action: str
+    affected_rooms: list[str]
+    generated_at: str
+    status: str = "Open"
+    priority_score: int = Field(ge=0, le=100)
+    ai_explanation: str
+    anomaly: AnomalyExplanation | None = None
+    # Backward-compatible fields retained for existing clients.
+    description: str
+    estimated_saving: str
     room_id: str | None = None
 
 
@@ -58,6 +91,10 @@ class AnalyticsSummary(BaseModel):
     average_humidity_percent: float
     peak_power_room_id: str
     peak_power_kw: float
+    building_health_score: int
+    building_health_status: str
+    energy_efficiency_score: int
+    energy_efficiency_status: str
 
 
 class SimulationRequest(BaseModel):

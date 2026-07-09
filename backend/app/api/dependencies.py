@@ -2,6 +2,7 @@ from fastapi import Request
 
 from app.services.ai_service import AIService
 from app.services.analytics_service import AnalyticsService
+from app.services.health_service import HealthService
 from app.services.recommendation_service import RecommendationService
 from app.services.sensor_service import SensorService
 from app.services.simulation_service import SimulationService
@@ -17,6 +18,10 @@ def get_recommendation_service(request: Request) -> RecommendationService:
 
 def get_analytics_service(request: Request) -> AnalyticsService:
     return request.app.state.analytics_service
+
+
+def get_health_service(request: Request) -> HealthService:
+    return request.app.state.health_service
 
 
 def get_simulation_service(request: Request) -> SimulationService:

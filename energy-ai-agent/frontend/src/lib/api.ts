@@ -1,5 +1,5 @@
 import type { MeterDataRecord } from '@shared/energy';
-import type { ObservationsResponse, ReasoningResponse, SmartDashboardResponse } from '@shared/energy';
+import type { ObservationsResponse, RecommendationsResponse, ReasoningResponse, SmartDashboardResponse } from '@shared/energy';
 
 export type MeterDataResponse = {
   source: string;
@@ -44,4 +44,14 @@ export async function fetchReasoning(): Promise<ReasoningResponse> {
   }
 
   return response.json() as Promise<ReasoningResponse>;
+}
+
+export async function fetchRecommendations(): Promise<RecommendationsResponse> {
+  const response = await fetch('/api/recommendations');
+
+  if (!response.ok) {
+    throw new Error('Unable to load recommendations');
+  }
+
+  return response.json() as Promise<RecommendationsResponse>;
 }

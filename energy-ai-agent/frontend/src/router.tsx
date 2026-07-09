@@ -5,6 +5,7 @@ import { LearningHistoryPage } from '@/pages/LearningHistoryPage';
 import { ModulePage } from '@/pages/ModulePage';
 import { ObservationsPage } from '@/pages/ObservationsPage';
 import { ReasoningPage } from '@/pages/ReasoningPage';
+import { RecommendationsPage } from '@/pages/RecommendationsPage';
 import { WhatIfPage } from '@/pages/WhatIfPage';
 
 export const router = createBrowserRouter([
@@ -25,16 +26,7 @@ export const router = createBrowserRouter([
         ),
       },
       { path: 'reasoning', element: <ReasoningPage /> },
-      {
-        path: 'recommendations',
-        element: (
-          <ModulePage
-            title="Recommendations"
-            endpoint="/api/recommendations"
-            summary="Ranked action cards with rationale, effort, and expected savings."
-          />
-        ),
-      },
+      { path: 'recommendations', element: <RecommendationsPage /> },
       {
         path: 'savings',
         element: (

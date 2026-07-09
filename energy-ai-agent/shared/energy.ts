@@ -94,19 +94,57 @@ export type ReasoningResponse = {
   timeline: ReasoningTimelineItem[];
 };
 
+export type RecommendationPriorityLabel = 'Critical' | 'High' | 'Medium' | 'Low';
+
+export type RecommendationImpact = 'High' | 'Medium' | 'Low';
+
+export type RecommendationDifficulty = 'Easy' | 'Moderate' | 'Hard';
+
+export type RecommendationRisk = 'Low' | 'Medium' | 'High';
+
+export type DecisionRecommendation = {
+  id: string;
+  priority: number;
+  priorityLabel: RecommendationPriorityLabel;
+  priorityScore: number;
+  title: string;
+  reason: string;
+  expectedImpact: RecommendationImpact;
+  estimatedSavings: number;
+  estimatedEnergySaved: number;
+  difficulty: RecommendationDifficulty;
+  implementationTime: string;
+  confidence: number;
+  risk: RecommendationRisk;
+  linkedReasoning: string;
+  currentSituation: string;
+  recommendedAction: string;
+  expectedImprovement: string;
+};
+
+export type RecommendationsSummary = {
+  recommendationsGenerated: number;
+  highPriority: number;
+  mediumPriority: number;
+  lowPriority: number;
+  estimatedMonthlySavings: number;
+  estimatedYearlySavings: number;
+  highestImpactRecommendation: string;
+  averageConfidence: number;
+};
+
+export type RecommendationsResponse = {
+  generatedAt: string;
+  sourceReasoningGeneratedAt: string;
+  summary: RecommendationsSummary;
+  recommendations: DecisionRecommendation[];
+};
+
 export type Prediction = {
   horizon: string;
   expectedUsageKwh: number;
   peakRisk: 'low' | 'medium' | 'high';
   confidence: number;
-};
-
-export type Recommendation = {
-  id: string;
-  action: string;
-  rationale: string;
-  estimatedMonthlySavings: number;
-  effort: 'low' | 'medium' | 'high';
 };
 
 export type WhatIfRequest = {

@@ -6,12 +6,14 @@ import type {
   MeterDataRecord,
   ApplianceHealthStatus,
   ObservationsResponse,
+  RecommendationsResponse,
   ReasoningResponse,
   SmartDashboardResponse,
   WhatIfRequest,
 } from '../../../shared/energy.js';
 import { ObservationEngine } from '../engines/ObservationEngine.js';
 import { readMeterData } from './dataService.js';
+import { generateRecommendations } from './recommendationService.js';
 import { generateReasoning } from './reasoningService.js';
 
 export async function getMeterData() {
@@ -129,33 +131,8 @@ export async function getReasoning(): Promise<ReasoningResponse> {
   return generateReasoning();
 }
 
-export function getRecommendations() {
-  return {
-    status: 'placeholder',
-    recommendations: [
-      {
-        id: 'rec-pre-cool',
-        action: 'Pre-cool common areas before peak tariff hours.',
-        rationale: 'Shift HVAC demand away from high-price periods while preserving comfort.',
-        estimatedMonthlySavings: 1240,
-        effort: 'medium',
-      },
-      {
-        id: 'rec-lighting',
-        action: 'Dim lighting by 15% in high-daylight zones.',
-        rationale: 'Solar production indicates daylight availability during costly hours.',
-        estimatedMonthlySavings: 410,
-        effort: 'low',
-      },
-      {
-        id: 'rec-ev-shift',
-        action: 'Move EV charging to late evening off-peak windows.',
-        rationale: 'Weekend and evening EV demand can avoid weekday peak price exposure.',
-        estimatedMonthlySavings: 680,
-        effort: 'low',
-      },
-    ],
-  };
+export async function getRecommendations(): Promise<RecommendationsResponse> {
+  return generateRecommendations();
 }
 
 export function getSavings() {

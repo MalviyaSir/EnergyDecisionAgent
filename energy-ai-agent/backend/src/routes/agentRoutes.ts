@@ -63,8 +63,12 @@ agentRouter.get('/reasoning', async (_request, response, next) => {
   }
 });
 
-agentRouter.get('/recommendations', (_request, response) => {
-  response.json(getRecommendations());
+agentRouter.get('/recommendations', async (_request, response, next) => {
+  try {
+    response.json(await getRecommendations());
+  } catch (error) {
+    next(error);
+  }
 });
 
 agentRouter.get('/savings', (_request, response) => {

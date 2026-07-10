@@ -16,6 +16,7 @@ const whatIfSchema = z.object({
   temperatureSetpoint: z.number().min(18).max(30).optional(),
   shiftEvCharging: z.boolean().optional(),
   reduceLightingPercent: z.number().min(0).max(60).optional(),
+  occupancyPercent: z.number().min(0).max(100).optional(),
   batteryReservePercent: z.number().min(10).max(90).optional(),
 });
 
@@ -127,7 +128,7 @@ agentRouter.post('/what-if', async (request, response, next) => {
       turn_off_idle_lights: true,
       ac_setpoint_c: result.data.temperatureSetpoint ?? 24,
       lighting_schedule_percent: result.data.reduceLightingPercent ? (100 - result.data.reduceLightingPercent) : 100,
-      occupancy_percent: 100,
+      occupancy_percent: result.data.occupancyPercent ?? 100,
       working_hours_start: 9,
       working_hours_end: 17,
       electricity_tariff_per_kwh: 8.5,

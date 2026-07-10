@@ -3,10 +3,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.schemas.energy import ChatResponse, Dashboard, Recommendation, Room
 from app.services.building_context_service import BuildingContextService
+from app.schemas.energy import ChatResponse, Dashboard, Recommendation, Room
 from app.services.energy_consultant_prompt_builder import EnergyConsultantPromptBuilder
 from app.services.energy_consultant_response_formatter import EnergyConsultantResponseFormatter
+from app.services.energy_strategy_planner_service import EnergyStrategyPlannerService
 from app.services.openai_client import OpenAIClient
 from app.utils.settings import Settings
 
@@ -63,6 +64,21 @@ class AIService:
             user_question=message,
         )
 
+        # Get settings
+        settings = self._settings
+        if settings is None:
+            from app.utils.settings import get_settings
+
+            settings = get_settings()
+
+        planner = EnergyStrategyPlannerService(settings=settings)
+        strategy_plan = planner.build_plan(
+            message=message,
+            rooms=rooms,
+            dashboard=dashboard,
+            recommendations=recommendations,
+        )
+
         # Detect user intent for goal-based prioritization
         user_intent = context.get("user_intent", "general_inquiry")
 
@@ -84,7 +100,7 @@ class AIService:
         client = OpenAIClient.from_env()
         if client is None:
             logger.info("OpenAI client not available; using rule-based fallback")
-            return fallback
+            return self._apply_strategy_plan(fallback, strategy_plan)
 
         # Build prompts with goal-based guidance
         system_prompt = EnergyConsultantPromptBuilder.build_system_prompt(user_intent)
@@ -109,13 +125,13 @@ class AIService:
             )
 
             logger.info("OpenAI consultant generated response successfully")
-            return response
+            return self._apply_strategy_plan(response, strategy_plan)
 
         except Exception as exc:  # noqa: BLE001
             logger.warning(
                 "OpenAI consultant generation failed; using fallback. exc=%s", exc
             )
-            return fallback
+            return self._apply_strategy_plan(fallback, strategy_plan)
 
     def answer(
         self, message: str, recommendations: list[Recommendation]
@@ -178,6 +194,24 @@ class AIService:
                 "OpenAI consultant generation failed; using fallback. exc=%s", exc
             )
             return fallback
+
+    def _apply_strategy_plan(self, response: ChatResponse, plan: Any) -> ChatResponse:
+        """Attach the deterministic or AI-backed strategy plan to the existing chat response."""
+        if not plan:
+            return response
+
+        response.current_status = getattr(plan, "current_status", None)
+        response.target_goal = getattr(plan, "target_goal", None)
+        response.optimization_strategy = getattr(plan, "optimization_strategy", None)
+        response.prioritized_action_plan = getattr(plan, "prioritized_action_plan", None)
+        response.expected_savings = getattr(plan, "expected_savings", None)
+        response.expected_carbon_reduction = getattr(plan, "expected_carbon_reduction", None)
+        response.expected_timeline = getattr(plan, "expected_timeline", None)
+        response.roi = getattr(plan, "roi", None)
+        response.difficulty = getattr(plan, "difficulty", None)
+        response.priority = getattr(plan, "priority", response.priority)
+        response.confidence = getattr(plan, "confidence", response.confidence)
+        return response
 
     def _get_response_schema(self) -> dict[str, Any]:
         """Get JSON schema for consultant response."""

@@ -177,6 +177,33 @@ class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=1000)
 
 
+class StrategyAction(BaseModel):
+    priority: int
+    title: str
+    rationale: str
+    why: str
+    expected_savings: str
+    expected_carbon_reduction: str
+    timeline: str
+    difficulty: str
+    business_impact: str
+    confidence: int = Field(ge=0, le=100)
+
+
+class EnergyStrategyPlan(BaseModel):
+    current_status: str
+    target_goal: str
+    optimization_strategy: str
+    prioritized_action_plan: list[StrategyAction]
+    expected_savings: str
+    expected_carbon_reduction: str
+    expected_timeline: str
+    roi: str
+    difficulty: str
+    priority: str
+    confidence: int = Field(ge=0, le=100)
+
+
 class ChatResponse(BaseModel):
     # Backward-compatible fields (existing clients depend on these)
     answer: str
@@ -193,6 +220,17 @@ class ChatResponse(BaseModel):
     priority: str
     confidence: int = Field(ge=0, le=100)
     next_best_action: str
+
+    # Energy strategy planner output (additional fields for existing clients)
+    current_status: str | None = None
+    target_goal: str | None = None
+    optimization_strategy: str | None = None
+    prioritized_action_plan: list[StrategyAction] | None = None
+    expected_savings: str | None = None
+    expected_carbon_reduction: str | None = None
+    expected_timeline: str | None = None
+    roi: str | None = None
+    difficulty: str | None = None
 
 
 class DailyEnergyBrief(BaseModel):

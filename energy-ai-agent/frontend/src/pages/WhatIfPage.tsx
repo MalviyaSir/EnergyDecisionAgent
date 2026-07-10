@@ -72,6 +72,7 @@ export function WhatIfPage() {
         body: JSON.stringify({
           temperatureSetpoint: params.temperatureSetpoint,
           reduceLightingPercent: params.lightingReduction,
+          occupancyPercent: params.occupancyPercent,
           shiftEvCharging: params.shiftEvCharging,
           batteryReservePercent: params.batteryReservePercent,
         }),

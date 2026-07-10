@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import analytics, chat, dashboard, recommendations, rooms, simulation
+from app.api import analytics, chat, daily_brief, dashboard, recommendations, rooms, simulation
 from app.services.ai_service import AIService
 from app.services.analytics_service import AnalyticsService
 from app.services.health_service import HealthService
@@ -58,6 +58,7 @@ app.include_router(recommendations.router)
 app.include_router(analytics.router)
 app.include_router(simulation.router)
 app.include_router(chat.router)
+app.include_router(daily_brief.router)
 
 
 @app.get("/health", tags=["health"])

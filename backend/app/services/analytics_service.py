@@ -1,3 +1,5 @@
+from typing import Any
+
 from app.schemas.energy import AnalyticsSummary, Dashboard, Room
 from app.services.health_service import HealthService
 from app.services.recommendation_service import RecommendationService
@@ -66,3 +68,75 @@ class AnalyticsService:
             energy_efficiency_score=efficiency_score,
             energy_efficiency_status=efficiency_status,
         )
+
+    def extract_alerts(self, rooms: list[Room], dashboard: Dashboard) -> list[dict[str, Any]]:
+        """Extract alerts from rooms and dashboard data."""
+        alerts = []
+        
+        # Check for high consumption
+        if dashboard.current_consumption > 50:
+            alerts.append({
+                "type": "high_consumption",
+                "severity": "high",
+                "message": f"High power consumption detected: {dashboard.current_consumption} kW",
+            })
+        
+        # Check for temperature issues
+        hot_rooms = [r for r in rooms if r.temperature_c > 30]
+        if hot_rooms:
+            alerts.append({
+                "type": "thermal_stress",
+                "severity": "high",
+                "message": f"Thermal stress in {len(hot_rooms)} room(s) - temperature above 30°C",
+            })
+        
+        # Check for equipment issues
+        idle_ac = [r for r in rooms if r.ac_status == "ON" and not r.occupied]
+        if idle_ac:
+            alerts.append({
+                "type": "equipment_malfunction",
+                "severity": "medium",
+                "message": f"AC running idle in {len(idle_ac)} unoccupied room(s)",
+            })
+        
+        return alerts
+
+    def extract_anomalies(self, rooms: list[Room], dashboard: Dashboard) -> list[dict[str, Any]]:
+        """Extract anomalies from building data."""
+        anomalies = []
+        
+        # High humidity anomaly
+        high_humidity_rooms = [r for r in rooms if r.humidity_percent > 70]
+        if high_humidity_rooms:
+            anomalies.append({
+                "type": "humidity_anomaly",
+                "severity": "Medium",
+                "description": f"High humidity detected in {len(high_humidity_rooms)} room(s)",
+                "rooms": [r.room_id for r in high_humidity_rooms],
+            })
+        
+        # Occupancy anomaly
+        if dashboard.occupancy_percentage > 90:
+            anomalies.append({
+                "type": "occupancy_anomaly",
+                "severity": "Low",
+                "description": "Building at high occupancy - monitor thermal comfort",
+                "rooms": [],
+            })
+        
+        # Temperature variance anomaly
+        temps = [r.temperature_c for r in rooms]
+        if temps and (max(temps) - min(temps)) > 8:
+            anomalies.append({
+                "type": "temperature_variance",
+                "severity": "Medium",
+                "description": f"Large temperature variance ({max(temps) - min(temps):.1f}°C) across building",
+                "rooms": [],
+            })
+        
+        return anomalies
+
+    def recommendations(self, rooms: list[Room]):
+        """Get recommendations for building."""
+        return self._recommendation_service.generate(rooms)
+

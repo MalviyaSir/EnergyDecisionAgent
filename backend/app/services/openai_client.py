@@ -64,3 +64,31 @@ class OpenAIClient:
         import json
 
         return json.loads(text)
+
+    def generate_text(self, *, system_prompt: str, user_message: str) -> str:
+        """Generate plain text response (not JSON).
+        
+        Args:
+            system_prompt: System context for the model
+            user_message: User message to respond to
+            
+        Returns:
+            Generated text response
+        """
+        # Local import to avoid dependency issues if OpenAI is not installed.
+        from openai import OpenAI  # type: ignore
+
+        client = OpenAI(api_key=self._config.api_key)
+
+        response = client.chat.completions.create(
+            model=self._config.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message},
+            ],
+            temperature=0.7,
+            max_tokens=500,
+        )
+
+        return response.choices[0].message.content or ""
+

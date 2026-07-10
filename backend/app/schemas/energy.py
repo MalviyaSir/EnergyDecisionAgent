@@ -98,15 +98,79 @@ class AnalyticsSummary(BaseModel):
 
 
 class SimulationRequest(BaseModel):
+    # Legacy parameters (backward compatibility)
     turn_off_idle_ac: bool = True
     turn_off_idle_lights: bool = True
     ac_setpoint_c: int = Field(default=24, ge=18, le=30)
+    
+    # New What-if parameters
+    lighting_schedule_percent: int = Field(default=100, ge=0, le=100)
+    occupancy_percent: int = Field(default=100, ge=0, le=100)
+    working_hours_start: int = Field(default=9, ge=0, le=23)
+    working_hours_end: int = Field(default=17, ge=0, le=23)
+    electricity_tariff_per_kwh: float = Field(default=8.5, ge=1, le=20)
+    solar_capacity_kw: float = Field(default=0, ge=0, le=500)
+    battery_capacity_kwh: float = Field(default=0, ge=0, le=1000)
+    ev_charging_load_kw: float = Field(default=0, ge=0, le=100)
+
+
+class WhatIfComparison(BaseModel):
+    metric: str
+    current_value: float | str
+    proposed_value: float | str
+    improvement_percent: float
+    unit: str
+
+
+class WhatIfAnalysis(BaseModel):
+    executive_summary: str
+    benefits: list[str]
+    trade_offs: list[str]
+    risks: list[str]
+    recommendations: list[str]
+    confidence_score: int = Field(ge=0, le=100)
 
 
 class SimulationResult(BaseModel):
+    # Current state metrics
+    current_energy_usage_kwh: float
+    current_monthly_bill_inr: float
+    current_comfort_score: int = Field(ge=0, le=100)
+    current_efficiency_score: int = Field(ge=0, le=100)
+    current_health_score: int = Field(ge=0, le=100)
+    
+    # Proposed state metrics
+    predicted_energy_usage_kwh: float
+    predicted_monthly_bill_inr: float
+    predicted_comfort_score: int = Field(ge=0, le=100)
+    predicted_efficiency_score: int = Field(ge=0, le=100)
+    predicted_health_score: int = Field(ge=0, le=100)
+    
+    # Impact metrics
+    monthly_savings_inr: float
+    annual_savings_inr: float
+    carbon_reduction_kg_co2: float
+    energy_efficiency_improvement_percent: float
+    building_health_improvement_percent: float
+    peak_load_reduction_kw: float
+    roi_percent: float
+    
+    # Additional metrics
+    peak_load_reduction_percent: float
+    daily_savings_inr: float
+    
+    # AI Analysis
+    analysis: WhatIfAnalysis
+    
+    # Comparison data
+    comparisons: list[WhatIfComparison]
+    
+    # Actions considered
+    actions_considered: list[str]
+    
+    # Backward-compatible fields (existing clients)
     estimated_daily_saving_inr: float
     estimated_monthly_saving_inr: float
-    actions_considered: list[str]
 
 
 class ChatRequest(BaseModel):
@@ -129,3 +193,52 @@ class ChatResponse(BaseModel):
     priority: str
     confidence: int = Field(ge=0, le=100)
     next_best_action: str
+
+
+class DailyEnergyBrief(BaseModel):
+    # Greeting and timing
+    good_morning_message: str
+    date: str
+    generation_time: str
+    
+    # Building status overview
+    overall_building_health: str
+    building_health_score: int = Field(ge=0, le=100)
+    building_health_trend: str
+    
+    # Energy metrics
+    energy_efficiency: str
+    energy_efficiency_score: int = Field(ge=0, le=100)
+    today_forecast: str
+    
+    # Financial metrics
+    predicted_electricity_bill_today: str
+    predicted_electricity_bill_month: str
+    estimated_daily_saving: str
+    estimated_monthly_saving: str
+    
+    # Peak and anomalies
+    predicted_peak_hour: str
+    peak_load_kw: float
+    
+    # Environmental impact
+    carbon_reduction_today: str
+    carbon_reduction_month: str
+    
+    # Alerts and risks
+    critical_alerts: list[str]
+    top_risks: list[str]
+    equipment_requiring_attention: list[str]
+    
+    # Recommendations
+    top_recommendations: list[str]
+    priority_actions: list[str]
+    
+    # Analysis
+    executive_summary: str
+    facility_manager_insights: str
+    
+    # Data quality
+    confidence_score: int = Field(ge=0, le=100)
+    data_freshness_minutes: int
+

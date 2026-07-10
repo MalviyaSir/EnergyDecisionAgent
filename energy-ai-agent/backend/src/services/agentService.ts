@@ -13,7 +13,7 @@ import type {
   WhatIfRequest,
 } from '../../../shared/energy.js';
 import { ObservationEngine } from '../engines/ObservationEngine.js';
-import { readMeterData } from './dataService.js';
+import { readMeterData, updateLiveTelemetry } from './dataService.js';
 import { generateRecommendations } from './recommendationService.js';
 import { generateReasoning } from './reasoningService.js';
 import { generateSavings } from './savingsService.js';
@@ -22,6 +22,14 @@ export async function getMeterData() {
   return {
     source: 'local-json',
     records: await readMeterData(),
+  };
+}
+
+export function setLiveTelemetry(overrides: Partial<MeterDataRecord>) {
+  updateLiveTelemetry(overrides);
+  return {
+    status: 'updated',
+    message: 'Telemetry updated for the live dashboard and reasoning workflows.',
   };
 }
 

@@ -13,7 +13,7 @@ const events = [
 
 export function LearningHistoryPage() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
-  const [message, setMessage] = useState('Placeholder trail showing where feedback-driven behavior will live.');
+  const [message, setMessage] = useState('Your feedback is shaping future recommendations and prioritization.');
 
   async function submitFeedback() {
     setStatus('sending');
@@ -60,7 +60,7 @@ export function LearningHistoryPage() {
           {status === 'error' ? (
             <div className="flex items-center gap-2 rounded-lg border border-rose-300/20 bg-rose-500/10 p-3 text-sm text-rose-100">
               <AlertTriangle className="h-4 w-4" />
-              Feedback could not be recorded. The placeholder history is still available.
+              Feedback could not be recorded. The latest recommendation context remains available for retry.
             </div>
           ) : null}
           <Button className="mt-2 w-fit" onClick={submitFeedback} disabled={status === 'sending'}>

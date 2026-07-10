@@ -14,6 +14,9 @@ import {
   Route,
   ShieldCheck,
   UserCircle,
+  MessageSquare,
+  NotebookText,
+  Radio,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useClock } from '@/hooks/useClock';
@@ -27,6 +30,9 @@ const navigation = [
   { label: 'Recommendations', path: '/recommendations', icon: Lightbulb },
   { label: 'Savings', path: '/savings', icon: CircleDollarSign },
   { label: 'What-if Simulator', path: '/what-if', icon: Route },
+  { label: 'Daily Brief', path: '/daily-brief', icon: NotebookText },
+  { label: 'Live Data', path: '/live-data', icon: Radio },
+  { label: 'Chat', path: '/chat', icon: MessageSquare },
   { label: 'Learning History', path: '/learning-history', icon: History },
 ];
 
@@ -134,12 +140,24 @@ export function AppLayout() {
                     </div>
                     <div className="mt-4 grid gap-2 text-sm text-slate-300">
                       <div className="flex justify-between gap-3">
-                        <span className="text-slate-500">Workspace</span>
-                        <span className="font-semibold text-slate-100">Demo Site</span>
+                        <span className="text-slate-500">Building</span>
+                        <span className="font-semibold text-slate-100">North Campus HQ</span>
                       </div>
                       <div className="flex justify-between gap-3">
-                        <span className="text-slate-500">Auth</span>
-                        <span className="font-semibold text-teal-100">Placeholder</span>
+                        <span className="text-slate-500">Manager</span>
+                        <span className="font-semibold text-slate-100">S. Rao</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Role</span>
+                        <span className="font-semibold text-teal-100">Energy Ops Analyst</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Theme</span>
+                        <span className="font-semibold text-slate-100">Dark / Live</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Alerts</span>
+                        <span className="font-semibold text-slate-100">Enabled</span>
                       </div>
                     </div>
                   </div>

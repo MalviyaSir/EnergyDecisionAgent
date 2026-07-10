@@ -107,8 +107,8 @@ export function ModulePage({ title, summary, endpoint }: ModulePageProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Placeholder Response</CardTitle>
-          <CardDescription>Visible contract for judges and future implementation work.</CardDescription>
+          <CardTitle>Live response payload</CardTitle>
+          <CardDescription>Inspect the current API contract and the data returned by the connected service.</CardDescription>
         </CardHeader>
         <CardContent>
           {error ? (

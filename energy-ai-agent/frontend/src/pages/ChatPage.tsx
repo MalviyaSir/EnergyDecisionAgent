@@ -33,8 +33,8 @@ export function ChatPage() {
 
     setLoading(true);
     try {
-      // Backend endpoint (FastAPI): POST /chat
-      const data = await requestJson<ChatResponse>('/chat', {
+      // Backend endpoint: POST /api/chat
+      const data = await requestJson<ChatResponse>('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: trimmed }),

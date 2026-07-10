@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const backendUrl = process.env.BACKEND_URL ?? 'http://localhost:4000';
 
 export default defineConfig({
   plugins: [react()],
@@ -17,8 +16,14 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': backendUrl,
-      '/health': backendUrl,
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+      '/health': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
     },
   },
 });
